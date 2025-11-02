@@ -2,6 +2,7 @@ package com.leave.tracker.service;
 
 import com.leave.tracker.dto.LeaveRequestDto;
 import com.leave.tracker.dto.LeaveResponseDto;
+import com.leave.tracker.entity.EmailDetails;
 import com.leave.tracker.entity.LeaveRequest;
 import com.leave.tracker.exceptions.ApiException;
 import com.leave.tracker.repository.LeaveRequestRepository;
@@ -17,9 +18,11 @@ import java.util.stream.Collectors;
 public class LeaveServiceImpl implements LeaveService {
 
     private final LeaveRequestRepository leaveRepo;
+    private final EmailService emailService;
 
-    public LeaveServiceImpl(LeaveRequestRepository leaveRepo) {
+    public LeaveServiceImpl(LeaveRequestRepository leaveRepo, EmailService emailService) {
         this.leaveRepo = leaveRepo;
+        this.emailService = emailService;
     }
 
     @Override
@@ -72,6 +75,7 @@ public class LeaveServiceImpl implements LeaveService {
 
     @Override
     public ApiResponse<LeaveResponseDto> updateStatus(Long id, LeaveRequest.LeaveStatus status) {
+
         log.info("START SERVICE_LAYER updateStatus - id: {}, newStatus: {}", id, status);
         try {
             LeaveRequest req = leaveRepo.findById(id)
@@ -79,8 +83,24 @@ public class LeaveServiceImpl implements LeaveService {
 
             req.setStatus(status);
             LeaveRequest updated = leaveRepo.save(req);
-
             log.info("END SERVICE_LAYER updateStatus - updatedLeave: {}", updated);
+            log.info("START SERVICE_LAYER send Email to {}",updated.getEmployeeName());
+            EmailDetails mailDetails = EmailDetails.builder()
+                    .recipient("vinulmanjitha98hutch@gmail.com")
+                    .msgBody("Dear "+updated.getEmployeeName()+",\n\nYour "+updated.getLeaveType()+" leaves from " + updated.getStartDate() + " to " + updated.getEndDate() + " have been " + updated.getStatus() + ".\n\n"+"Thank you.\nH One Pvt Ltd")
+                    .subject("Leave Request " + updated.getStatus())
+                    .build();
+            emailService.sendMail(mailDetails);
+
+            log.info("END SERVICE_LAYER send Email to {}",updated.getEmployeeName());
+
+
+
+
+
+
+
+
             return new ApiResponse<>(LeaveResponseDto.fromEntity(updated));
 
         } catch (ApiException e) {
