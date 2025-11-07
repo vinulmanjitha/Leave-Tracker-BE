@@ -18,21 +18,7 @@ It handles leave request submissions, validation, approval workflows, integrates
 ---
 
 ##  Architecture Overview
-                │ REST API
- ┌──────────────▼─────────────┐
- │     Spring Boot Backend    │
- │  - Controller Layer (REST) │
- │  - Service Layer (Business Logic)
- │  - Repository Layer (JPA)
- │  - Integration: Nager.Date API
- │  - Email Notification (SMTP)
- └──────────────┬─────────────┘
-                │ 
- ┌──────────────▼─────────────┐
- │   PostgreSQL (AWS RDS)     │
- │  - Stores leave data        │
- │  - Employee information     │
- └─────────────────────────────┘
+ ![Image Alt]([image_url](https://github.com/vinulmanjitha/Leave-Tracker-BE/blob/0d0f0a2c6f0a6a79009b90dc0e29ee3fda6f290c/Blank%20diagram.png))
 
 
 ## 🧩 Responsibilities
