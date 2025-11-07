@@ -19,8 +19,14 @@ public class LeaveRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "employee_id", nullable = false)
+    private String employeeId;
+
     @Column(name = "employee_name", nullable = false)
     private String employeeName;
+
+    @Column(name = "approved_by")
+    private String approvedBy;
 
     @Column(name = "leave_type", nullable = false)
     private String leaveType;

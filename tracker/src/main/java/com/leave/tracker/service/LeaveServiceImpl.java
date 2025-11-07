@@ -30,6 +30,7 @@ public class LeaveServiceImpl implements LeaveService {
         log.info("START SERVICE_LAYER submitLeave - request: {}", dto);
         try {
             LeaveRequest entity = LeaveRequest.builder()
+                    .employeeId(dto.employeeId())
                     .employeeName(dto.employeeName())
                     .leaveType(dto.leaveType())
                     .startDate(dto.startDate())
@@ -82,6 +83,7 @@ public class LeaveServiceImpl implements LeaveService {
                     .orElseThrow(() -> new ApiException("Leave request not found with id: " + id));
 
             req.setStatus(status);
+            req.setApprovedBy("authVinul");
             LeaveRequest updated = leaveRepo.save(req);
             log.info("END SERVICE_LAYER updateStatus - updatedLeave: {}", updated);
             log.info("START SERVICE_LAYER send Email to {}",updated.getEmployeeName());
@@ -93,13 +95,6 @@ public class LeaveServiceImpl implements LeaveService {
             emailService.sendMail(mailDetails);
 
             log.info("END SERVICE_LAYER send Email to {}",updated.getEmployeeName());
-
-
-
-
-
-
-
 
             return new ApiResponse<>(LeaveResponseDto.fromEntity(updated));
 
