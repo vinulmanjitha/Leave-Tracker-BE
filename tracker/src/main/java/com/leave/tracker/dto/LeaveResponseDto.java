@@ -15,7 +15,6 @@ public record LeaveResponseDto(
         LeaveRequest.LeaveStatus status,
         LocalDate createdAt
 ) {
-    // Static mapper from entity → DTO
     public static LeaveResponseDto fromEntity(LeaveRequest entity) {
         return new LeaveResponseDto(
                 entity.getId(),

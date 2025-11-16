@@ -83,13 +83,12 @@ public class LeaveServiceImpl implements LeaveService {
                     .orElseThrow(() -> new ApiException("Leave request not found with id: " + id));
 
             req.setStatus(status);
-            req.setApprovedBy("authVinul");
+            req.setApprovedBy("HRUser1");
             LeaveRequest updated = leaveRepo.save(req);
             log.info("END SERVICE_LAYER updateStatus - updatedLeave: {}", updated);
-            log.info("START SERVICE_LAYER send Email to {}",updated.getEmployeeName());
             EmailDetails mailDetails = EmailDetails.builder()
-                    .recipient("vinulmanjitha98hutch@gmail.com")
-                    .msgBody("Dear "+updated.getEmployeeName()+",\n\nYour "+updated.getLeaveType()+" leaves from " + updated.getStartDate() + " to " + updated.getEndDate() + " have been " + updated.getStatus() + ".\n\n"+"Thank you.\nH One Pvt Ltd")
+                    .recipient("vinulmanjitha98@gmail.com")
+                    .msgBody("Dear "+updated.getEmployeeName()+",\n\nYour "+updated.getLeaveType()+" leaves from " + updated.getStartDate() + " to " + updated.getEndDate() + " have been " + updated.getStatus() + ".\n\n"+"Thank you.\nHR Team")
                     .subject("Leave Request " + updated.getStatus())
                     .build();
             emailService.sendMail(mailDetails);
